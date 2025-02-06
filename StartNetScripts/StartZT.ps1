@@ -22,11 +22,11 @@ $Global:MyOSDCloud = [ordered]@{
     ShutdownSetupComplete = [bool]$false
     SyncMSUpCatDriverUSB = [bool]$true
     CheckSHA1 = [bool]$true
-    ZTI  = $true
-    Firmware = $true
+    ZTI  = [bool]$true
+    Firmware = [bool]$true
 }
 
-$Global:oobeCloud = @{
+<#$Global:oobeCloud = @{
     oobeSetDisplay = $true
     oobeSetRegionLanguage = $true
     oobeSetDateTime = $true
@@ -40,7 +40,7 @@ $Global:oobeCloud = @{
     oobeUpdateWindows = $false
     oobeRestartComputer = $true
     oobeStopComputer = $false
-}
+}#>
 
 $DriverPack = Get-OSDCloudDriverPack -Product $Product -OSVersion $OSVersion -OSReleaseID $OSReleaseID
 
@@ -67,6 +67,11 @@ write-host "Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $
 Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation -OSLanguage $OSLanguage
 
 write-host "OSDCloud Process Complete, Running Custom Actions From Script Before Reboot"
+
+if ($env:Username -eq 'defaultuser') {
+    osdcloud-StartOOBE -display -language -oobeSetDateTime
+    RemoveAppx -Basic
+}
 
 #Copy CMTrace Local:
 if (Test-path -path "x:\windows\system32\cmtrace.exe"){
