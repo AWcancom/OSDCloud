@@ -52,11 +52,6 @@ Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation
 
 write-host "OSDCloud Process Complete, Running Custom Actions From Script Before Reboot"
 
-if ($env:Username -eq 'defaultuser0') {
-    OSDCloud-StartOOBE -Display -Language -DateTime
-    Remove-Appx -Basic
-}
-
 #Copy CMTrace Local:
 if (Test-path -path "x:\windows\system32\cmtrace.exe"){
     copy-item "x:\windows\system32\cmtrace.exe" -Destination "C:\Windows\System\cmtrace.exe" -verbose
