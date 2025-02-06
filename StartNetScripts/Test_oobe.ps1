@@ -26,22 +26,6 @@ $Global:MyOSDCloud = [ordered]@{
     Firmware = [bool]$true
 }
 
-<#$Global:oobeCloud = @{
-    oobeSetDisplay = $true
-    oobeSetRegionLanguage = $true
-    oobeSetDateTime = $true
-    oobeRegisterAutopilot = $true
-    oobeRegisterAutopilotCommand = 'Get-WindowsAutopilotInfo -Online -GroupTag Demo -Assign'
-    oobeRemoveAppxPackage = $true
-    oobeRemoveAppxPackageName = 'CommunicationsApps','OfficeHub','People','Skype','Solitaire','Xbox','ZuneMusic','ZuneVideo'
-    oobeAddCapability = $true
-    oobeAddCapabilityName = 'NetFX'
-    oobeUpdateDrivers = $false
-    oobeUpdateWindows = $false
-    oobeRestartComputer = $true
-    oobeStopComputer = $false
-}#>
-
 $DriverPack = Get-OSDCloudDriverPack -Product $Product -OSVersion $OSVersion -OSReleaseID $OSReleaseID
 
 if ($DriverPack){
@@ -68,10 +52,15 @@ Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation
 
 write-host "OSDCloud Process Complete, Running Custom Actions From Script Before Reboot"
 
-if ($env:Username -eq 'defaultuser0' {
-    osdcloud-StartOOBE -display -language -oobeSetDateTime
-    RemoveAppx -Basic
-}
+#================================================
+#  [PostOS] SetupComplete CMD Command Line
+#================================================
+Write-Host -ForegroundColor Green "Create C:\Windows\Setup\Scripts\SetupComplete.cmd"
+$SetupCompleteCMD = @'
+powershell.exe -Command Set-ExecutionPolicy RemoteSigned -Force
+powershell.exe -Command "& {IEX (IRM oobetasks.osdcloud.ch)}"
+'@
+$SetupCompleteCMD | Out-File -FilePath 'C:\Windows\Setup\Scripts\SetupComplete.cmd' -Encoding ascii -Force
 
 #Copy CMTrace Local:
 if (Test-path -path "x:\windows\system32\cmtrace.exe"){
