@@ -26,6 +26,22 @@ $Global:MyOSDCloud = [ordered]@{
     Firmware = $true
 }
 
+$Global:oobeCloud = @{
+    oobeSetDisplay = $true
+    oobeSetRegionLanguage = $true
+    oobeSetDateTime = $true
+    oobeRegisterAutopilot = $true
+    oobeRegisterAutopilotCommand = 'Get-WindowsAutopilotInfo -Online -GroupTag Demo -Assign'
+    oobeRemoveAppxPackage = $true
+    oobeRemoveAppxPackageName = 'CommunicationsApps','OfficeHub','People','Skype','Solitaire','Xbox','ZuneMusic','ZuneVideo'
+    oobeAddCapability = $true
+    oobeAddCapabilityName = 'NetFX'
+    oobeUpdateDrivers = $false
+    oobeUpdateWindows = $false
+    oobeRestartComputer = $true
+    oobeStopComputer = $false
+}
+
 $DriverPack = Get-OSDCloudDriverPack -Product $Product -OSVersion $OSVersion -OSReleaseID $OSReleaseID
 
 if ($DriverPack){
