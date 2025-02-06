@@ -46,10 +46,13 @@ if (Test-HPIASupport){
 
 #Launch OSDCloud
 Write-Host "Starting OSDCloud" -ForegroundColor Green
-Start-OSDCloud
+
 #Autostart OSDCloud 
-#write-host "Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation -OSLanguage $OSLanguage"
-#Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation -OSLanguage $OSLanguage
+write-host "Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation -OSLanguage $OSLanguage"
+Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation -OSLanguage $OSLanguage
+
+#Start WIM File from USBmedia customimage.wim = Windows 11 24h2 index 5 = pro index 3 = enterprise
+#Start-OSDCloud -ImageFileURL 'D:\OSDCloud\OS\CustomImage.wim' -OSImageIndex 5
 
 write-host "OSDCloud Process Complete, Running Custom Actions From Script Before Reboot"
 
