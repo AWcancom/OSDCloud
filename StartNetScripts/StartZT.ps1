@@ -26,22 +26,6 @@ $Global:MyOSDCloud = [ordered]@{
     Firmware = $true
 }
 
-$Global:oobeCloud = @{
-    oobeSetDisplay = $true
-    oobeSetRegionLanguage = $true
-    oobeSetDateTime = $true
-    oobeRegisterAutopilot = $true
-    oobeRegisterAutopilotCommand = 'Get-WindowsAutopilotInfo -Online -GroupTag Demo -Assign'
-    oobeRemoveAppxPackage = $true
-    oobeRemoveAppxPackageName = 'CommunicationsApps','OfficeHub','People','Skype','Solitaire','Xbox','ZuneMusic','ZuneVideo'
-    oobeAddCapability = $true
-    oobeAddCapabilityName = 'NetFX'
-    oobeUpdateDrivers = $false
-    oobeUpdateWindows = $false
-    oobeRestartComputer = $true
-    oobeStopComputer = $false
-}
-
 $DriverPack = Get-OSDCloudDriverPack -Product $Product -OSVersion $OSVersion -OSReleaseID $OSReleaseID
 
 if ($DriverPack){
@@ -67,6 +51,11 @@ write-host "Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $
 Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation -OSLanguage $OSLanguage
 
 write-host "OSDCloud Process Complete, Running Custom Actions From Script Before Reboot"
+
+if ($env:Username -eq 'defaultuser0') {
+    OSDCloud-StartOOBE -Display -Language -DateTime
+    Remove-Appx -Basic
+}
 
 #Copy CMTrace Local:
 if (Test-path -path "x:\windows\system32\cmtrace.exe"){
