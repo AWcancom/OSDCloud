@@ -99,6 +99,17 @@ if ($WindowsPhase -eq 'AuditMode') {
 }
 #endregion
 #=================================================
+#region OOBE
+if ($WindowsPhase -eq 'OOBE') {
+
+    osdcloud-RemoveAppx -Basic
+    osdcloud-Rsat -Basic
+    osdcloud-NetFX
+    
+    $null = Stop-Transcript -ErrorAction Ignore
+    osdcloud-RestartComputer
+}
+#endregion
 
 #================================================
 #  [PostOS] SetupComplete CMD Command Line
