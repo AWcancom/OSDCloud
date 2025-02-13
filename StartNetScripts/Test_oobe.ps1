@@ -1,3 +1,24 @@
+#region Initialize
+#Start the Transcript
+$Transcript = "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))-OSDCloud.log"
+$null = Start-Transcript -Path (Join-Path "$env:SystemRoot\Temp" $Transcript) -ErrorAction Ignore
+
+#Determine the proper Windows environment
+if ($env:SystemDrive -eq 'X:') {$WindowsPhase = 'WinPE'}
+else {
+    $ImageState = (Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\State' -ErrorAction Ignore).ImageState
+    if ($env:UserName -eq 'defaultuser0') {$WindowsPhase = 'OOBE'}
+    elseif ($ImageState -eq 'IMAGE_STATE_SPECIALIZE_RESEAL_TO_OOBE') {$WindowsPhase = 'Specialize'}
+    elseif ($ImageState -eq 'IMAGE_STATE_SPECIALIZE_RESEAL_TO_AUDIT') {$WindowsPhase = 'AuditMode'}
+    else {$WindowsPhase = 'Windows'}
+}
+
+#Finish initialization
+Write-Host -ForegroundColor DarkGray "$ScriptName $ScriptVersion $WindowsPhase"
+
+#Load OSDCloud Functions
+Invoke-Expression -Command (Invoke-RestMethod -Uri functions.osdcloud.com)
+
 #Variables to define the Windows OS / Edition etc to be applied during OSDCloud
 $Product = (Get-MyComputerProduct)
 $Model = (Get-MyComputerModel)
@@ -44,17 +65,40 @@ if (Test-HPIASupport){
     #Manage-HPBiosSettings -SetSettings
 }
 
+#endregion
+#=================================================
+#region WinPE
 #Launch OSDCloud
 Write-Host "Starting OSDCloud" -ForegroundColor Green
+if ($WindowsPhase -eq 'WinPE') {
+    
+    #Stop the startup Transcript.  OSDCloud will create its own
+    $null = Stop-Transcript -ErrorAction Ignore
 
-#Autostart OSDCloud 
-write-host "Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation -OSLanguage $OSLanguage"
-Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation -OSLanguage $OSLanguage
+    #Autostart OSDCloud 
+    write-host "Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation -OSLanguage $OSLanguage"
+    Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation -OSLanguage $OSLanguage
 
-#Start WIM File from USBmedia customimage.wim = Windows 11 24h2 index 5 = pro index 3 = enterprise
-#Start-OSDCloud -ImageFileURL 'D:\OSDCloud\OS\CustomImage.wim' -OSImageIndex 5
+    #Start WIM File from USBmedia customimage.wim = Windows 11 24h2 index 5 = pro index 3 = enterprise
+    #Start-OSDCloud -ImageFileURL 'D:\OSDCloud\OS\CustomImage.wim' -OSImageIndex 5
 
-write-host "OSDCloud Process Complete, Running Custom Actions From Script Before Reboot"
+    write-host "OSDCloud Process Complete, Running Custom Actions From Script Before Reboot"
+
+}
+#endregion
+#=================================================
+#region Specialize
+if ($WindowsPhase -eq 'Specialize') {
+    $null = Stop-Transcript -ErrorAction Ignore
+}
+#endregion
+#=================================================
+#region AuditMode
+if ($WindowsPhase -eq 'AuditMode') {
+    $null = Stop-Transcript -ErrorAction Ignore
+}
+#endregion
+#=================================================
 
 #================================================
 #  [PostOS] SetupComplete CMD Command Line
