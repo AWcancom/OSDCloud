@@ -7,7 +7,7 @@ $OSReleaseID = '24H2'
 $OSName = 'Windows 11 24H2 x64'
 $OSEdition = 'Pro'
 $OSActivation = 'Retail'
-$OSLanguage = 'en-us'
+$OSLanguage = 'de-de'
  
 #Set OSDCloud Vars
 $Global:MyOSDCloud = [ordered]@{
@@ -38,7 +38,7 @@ if (Test-HPIASupport){
     $Global:MyOSDCloud.HPTPMUpdate = [bool]$True
     $Global:MyOSDCloud.HPIAALL = [bool]$true
     $Global:MyOSDCloud.HPBIOSUpdate = [bool]$true
-    
+
     #Set HP BIOS Settings to what I want:
     #iex (irm https://raw.githubusercontent.com/gwblok/garytown/master/OSD/CloudOSD/Manage-HPBiosSettings.ps1)
     #Manage-HPBiosSettings -SetSettings
