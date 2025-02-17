@@ -14,7 +14,7 @@ $Global:MyOSDCloud = [ordered]@{
     Restart = [bool]$true
     RecoveryPartition = [bool]$true
     OEMActivation = [bool]$True
-    WindowsUpdate = [bool]$False
+    WindowsUpdate = [bool]$True
     WindowsUpdateDrivers = [bool]$true
     WindowsDefenderUpdate = [bool]$true
     SetTimeZone = [bool]$true
@@ -26,22 +26,6 @@ $Global:MyOSDCloud = [ordered]@{
     Firmware = [bool]$true
 }
 
-<#$Global:oobeCloud = @{
-    oobeSetDisplay = $true
-    oobeSetRegionLanguage = $true
-    oobeSetDateTime = $true
-    oobeRegisterAutopilot = $true
-    oobeRegisterAutopilotCommand = 'Get-WindowsAutopilotInfo -Online -GroupTag Demo -Assign'
-    oobeRemoveAppxPackage = $true
-    oobeRemoveAppxPackageName = 'CommunicationsApps','OfficeHub','People','Skype','Solitaire','Xbox','ZuneMusic','ZuneVideo'
-    oobeAddCapability = $true
-    oobeAddCapabilityName = 'NetFX'
-    oobeUpdateDrivers = $false
-    oobeUpdateWindows = $false
-    oobeRestartComputer = $true
-    oobeStopComputer = $false
-}#>
-
 $DriverPack = Get-OSDCloudDriverPack -Product $Product -OSVersion $OSVersion -OSReleaseID $OSReleaseID
 
 if ($DriverPack){
@@ -50,11 +34,11 @@ if ($DriverPack){
  
 if (Test-HPIASupport){
     Write-Host "Detected HP Device, Enabling HPIA, HP BIOS and HP TPM Updates"
-    #$Global:MyOSDCloud.DevMode = [bool]$True
+    
     $Global:MyOSDCloud.HPTPMUpdate = [bool]$True
     $Global:MyOSDCloud.HPIAALL = [bool]$true
     $Global:MyOSDCloud.HPBIOSUpdate = [bool]$true
-    #$Global:MyOSDCloud.HPCMSLDriverPackLatest = [bool]$true #In Test 
+    
     #Set HP BIOS Settings to what I want:
     #iex (irm https://raw.githubusercontent.com/gwblok/garytown/master/OSD/CloudOSD/Manage-HPBiosSettings.ps1)
     #Manage-HPBiosSettings -SetSettings
@@ -68,12 +52,17 @@ Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation
 
 write-host "OSDCloud Process Complete, Running Custom Actions From Script Before Reboot"
 
-if ($env:Username -eq 'defaultuser0' {
-    osdcloud-StartOOBE -display -language -oobeSetDateTime
-    RemoveAppx -Basic
-}
+#================================================
+#  [PostOS] SetupComplete CMD Command Line
+#================================================
+Write-Host -ForegroundColor Green "Create C:\Windows\Setup\Scripts\SetupComplete.cmd"
+$SetupCompleteCMD = @'
+powershell.exe -Command Set-ExecutionPolicy RemoteSigned -Force
+powershell.exe -Command "& {IEX (IRM https://raw.githubusercontent.com/AWcancom/OSDCloud/refs/heads/main/CloudScripts/CleanUp.ps1)}"
+'@
+$SetupCompleteCMD | Out-File -FilePath 'C:\Windows\Setup\Scripts\SetupComplete.cmd' -Encoding ascii -Force
 
 #Copy CMTrace Local:
 if (Test-path -path "x:\windows\system32\cmtrace.exe"){
-    copy-item "x:\windows\system32\cmtrace.exe" -Destination "C:\Windows\System\cmtrace.exe" -verbose
+    copy-item "x:\windows\system32\cmtrace.exe" -Destination "C:\Windows\System32\cmtrace.exe" -verbose
 }
