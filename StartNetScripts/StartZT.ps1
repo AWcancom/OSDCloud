@@ -17,7 +17,7 @@ $Global:MyOSDCloud = [ordered]@{
     WindowsUpdate = [bool]$True
     WindowsUpdateDrivers = [bool]$true
     WindowsDefenderUpdate = [bool]$true
-    SetTimeZone = [bool]$true
+    SetTimeZone = [bool]$false
     ClearDiskConfirm = [bool]$False
     ShutdownSetupComplete = [bool]$false
     SyncMSUpCatDriverUSB = [bool]$true
@@ -125,7 +125,7 @@ $OOBECMD | Out-File -FilePath 'C:\Windows\System32\OOBE.cmd' -Encoding ascii -Fo
 Write-Host -ForegroundColor Green "Create C:\Windows\Setup\Scripts\SetupComplete.cmd"
 $SetupCompleteCMD = @'
 powershell.exe -Command Set-ExecutionPolicy RemoteSigned -Force
-powershell.exe -Command "& {IEX (IRM oobetasks.osdcloud.ch)}"
+powershell.exe -Command "& {IEX (IRM https://raw.githubusercontent.com/AWcancom/OSDCloud/refs/heads/main/CloudScripts/oobetasks.ps1)}"
 '@
 $SetupCompleteCMD | Out-File -FilePath 'C:\Windows\Setup\Scripts\SetupComplete.cmd' -Encoding ascii -Force
 
