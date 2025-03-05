@@ -106,19 +106,6 @@ If (!(Test-Path "C:\ProgramData\OSDeploy")) {
 $OOBEDeployJson | Out-File -FilePath "C:\ProgramData\OSDeploy\OSDeploy.OOBEDeploy.json" -Encoding ascii -Force
 
 #================================================
-#  [PostOS] AutopilotOOBE CMD Command Line
-#================================================
-Write-Host -ForegroundColor Green "Create C:\Windows\System32\OOBE.cmd"
-$OOBECMD = @'
-PowerShell -NoL -Com Set-ExecutionPolicy RemoteSigned -Force
-Set Path = %PATH%;C:\Program Files\WindowsPowerShell\Scripts
-Start /Wait PowerShell -NoL -C Install-Module AutopilotOOBE -Force -Verbose
-Start /Wait PowerShell -NoL -C Install-Module OSD -Force -Verbose
-Start /Wait PowerShell -NoL -C Start-OOBEDeploy
-'@
-$OOBECMD | Out-File -FilePath 'C:\Windows\System32\OOBE.cmd' -Encoding ascii -Force
-
-#================================================
 #  [PostOS] SetupComplete CMD Command Line
 #================================================
 Write-Host -ForegroundColor Green "Create C:\Windows\Setup\Scripts\SetupComplete.cmd"
@@ -135,5 +122,5 @@ if (Test-path -path "x:\windows\system32\cmtrace.exe"){
 
 
 if (Test-path -path "x:\OSDCloud\Config\Scripts\AutoPilot.ps1"){
-    copy-item "x:\OSDCloud\Config\Scripts\AutoPilot.ps1" -Destination "c:\OSDCloud\Config\Scripts\AutoPilot.ps1" -verbose
+    copy-item "x:\OSDCloud\Config\Scripts\AutoPilot.ps1" -Destination "c:\OSDCloud\Scripts\AutoPilot.ps1" -verbose
 }
