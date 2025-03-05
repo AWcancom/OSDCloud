@@ -115,7 +115,6 @@ Set Path = %PATH%;C:\Program Files\WindowsPowerShell\Scripts
 Start /Wait PowerShell -NoL -C Install-Module AutopilotOOBE -Force -Verbose
 Start /Wait PowerShell -NoL -C Install-Module OSD -Force -Verbose
 Start /Wait PowerShell -NoL -C Start-OOBEDeploy
-Start /Wait PowerShell -NoL -C Restart-Computer -Force
 '@
 $OOBECMD | Out-File -FilePath 'C:\Windows\System32\OOBE.cmd' -Encoding ascii -Force
 
@@ -132,4 +131,9 @@ $SetupCompleteCMD | Out-File -FilePath 'C:\Windows\Setup\Scripts\SetupComplete.c
 #Copy CMTrace Local:
 if (Test-path -path "x:\windows\system32\cmtrace.exe"){
     copy-item "x:\windows\system32\cmtrace.exe" -Destination "C:\Windows\System32\cmtrace.exe" -verbose
+}
+
+
+if (Test-path -path "x:\OSDCloud\Config\Scripts\AutoPilot.ps1"){
+    copy-item "x:\OSDCloud\Config\Scripts\AutoPilot.ps1" -Destination "c:\OSDCloud\Config\Scripts\AutoPilot.ps1" -verbose
 }

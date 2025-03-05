@@ -26,9 +26,6 @@ Write-Host -ForegroundColor DarkGray "Unregistering Scheduled Tasks"
 Unregister-ScheduledTask -TaskName "Scheduled Task for SendKeys" -Confirm:`$false
 Unregister-ScheduledTask -TaskName "Scheduled Task for OSDCloud post installation" -Confirm:`$false
 
-Write-Host -ForegroundColor DarkGray "Restarting Computer"
-Start-Process PowerShell -ArgumentList "-NoL -C Restart-Computer -Force" -Wait
-
 Stop-Transcript -Verbose | Out-File
 "@
 
