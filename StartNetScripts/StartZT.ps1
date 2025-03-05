@@ -111,7 +111,7 @@ $OOBEDeployJson | Out-File -FilePath "C:\ProgramData\OSDeploy\OSDeploy.OOBEDeplo
 Write-Host -ForegroundColor Green "Create C:\Windows\Setup\Scripts\SetupComplete.cmd"
 $SetupCompleteCMD = @'
 powershell.exe -Command Set-ExecutionPolicy RemoteSigned -Force
-powershell.exe -Command "& {IEX (IRM https://raw.githubusercontent.com/AWcancom/OSDCloud/refs/heads/main/CloudScripts/oobetasks.ps1)}"
+powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass "c:\OSDCloud\Scripts\AutoPilot.ps1"
 '@
 $SetupCompleteCMD | Out-File -FilePath 'C:\Windows\Setup\Scripts\SetupComplete.cmd' -Encoding ascii -Force
 
@@ -124,3 +124,5 @@ if (Test-path -path "x:\windows\system32\cmtrace.exe"){
 if (Test-path -path "x:\OSDCloud\Config\Scripts\AutoPilot.ps1"){
     copy-item "x:\OSDCloud\Config\Scripts\AutoPilot.ps1" -Destination "c:\OSDCloud\Scripts\AutoPilot.ps1" -verbose
 }
+
+#powershell.exe -Command "& {IEX (IRM https://raw.githubusercontent.com/AWcancom/OSDCloud/refs/heads/main/CloudScripts/oobetasks.ps1)}"
