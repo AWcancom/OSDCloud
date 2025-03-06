@@ -12,7 +12,7 @@ $OOBEScript =@"
 `$Global:Transcript = "`$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))-OOBEScripts.log"
 Start-Transcript -Path (Join-Path "`$env:ProgramData\Microsoft\IntuneManagementExtension\Logs\OSD\" `$Global:Transcript) -ErrorAction Ignore | Out-Null
 
-Start-Process PowerShell -ArgumentList "-NoL -C `"c:\OSDCloud\Scripts\AutoPilot.ps1`"" -Wait
+Start-Process PowerShell -ArgumentList "-NoL -C c:\OSDCloud\Scripts\AutoPilot.ps1" -Wait
 
 # Cleanup scheduled Tasks
 Write-Host -ForegroundColor DarkGray "Unregistering Scheduled Tasks"
