@@ -32,15 +32,7 @@ if ($DriverPack){
     $Global:MyOSDCloud.DriverPackName = $DriverPack.Name
 }
 
-if ($Manufacturer -eq 'Lenovo') {
-    Install-Module lsuclient -Force -Scope CurrentUser -SkipPublisherCheck
-    Start-Sleep -Seconds 120
-    $updates = get-lsupdate
-    Start-Sleep -Seconds 120
-    $updates | where-object {$_.type -eq 'BIOS'} | Install-LSUpdate -Verbose
-    Start-Sleep -Seconds 120
 
-}
  
 if (Test-HPIASupport){
     Write-Host "Detected HP Device, Enabling HPIA, HP BIOS and HP TPM Updates"
@@ -68,7 +60,7 @@ write-host "OSDCloud Process Complete, Running Custom Actions From Script Before
 Write-Host -ForegroundColor Green "Create C:\Windows\Setup\Scripts\SetupComplete.cmd"
 $SetupCompleteCMD = @'
 powershell.exe -Command Set-ExecutionPolicy RemoteSigned -Force
-powershell.exe -Command "& {IEX (IRM https://raw.githubusercontent.com/AWcancom/OSDCloud/refs/heads/main/CloudScripts/CleanUp.ps1)}"
+powershell.exe -Command "& {IEX (IRM https://raw.githubusercontent.com/AWcancom/OSDCloud/refs/heads/main/CloudScripts/lenovo_bios.ps1)}"
 '@
 $SetupCompleteCMD | Out-File -FilePath 'C:\Windows\Setup\Scripts\SetupComplete.cmd' -Encoding ascii -Force
 
