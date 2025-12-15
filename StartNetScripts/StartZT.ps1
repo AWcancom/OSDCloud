@@ -31,6 +31,12 @@ $DriverPack = Get-OSDCloudDriverPack -Product $Product -OSVersion $OSVersion -OS
 if ($DriverPack){
     $Global:MyOSDCloud.DriverPackName = $DriverPack.Name
 }
+
+if ($Manufacturer -eq 'Lenovo') {
+    Install-Module -Name 'lsuclient' -Force -Confirm:$false
+    $updates = get-lsupdate
+    $updates | where-object {$_.type -eq 'BIOS'} | Install-LSUpdate -Verbose
+}
  
 if (Test-HPIASupport){
     Write-Host "Detected HP Device, Enabling HPIA, HP BIOS and HP TPM Updates"
