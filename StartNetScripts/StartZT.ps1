@@ -36,6 +36,8 @@ if ($Manufacturer -eq 'Lenovo') {
     Install-Module lsuclient -Force -Scope CurrentUser -SkipPublisherCheck
     $updates = get-lsupdate
     $updates | where-object {$_.type -eq 'BIOS'} | Install-LSUpdate -Verbose
+    Read-Host "Press Enter to continue"
+
 }
  
 if (Test-HPIASupport){
