@@ -33,7 +33,7 @@ if ($DriverPack){
 }
 
 if ($Manufacturer -eq 'Lenovo') {
-    Install-Module -Name 'lsuclient' -Force -Confirm:$false -SkipPublisherCheck -TrustRepository
+    Install-Module lsuclient -Force -Scope CurrentUser -SkipPublisherCheck
     $updates = get-lsupdate
     $updates | where-object {$_.type -eq 'BIOS'} | Install-LSUpdate -Verbose
 }
