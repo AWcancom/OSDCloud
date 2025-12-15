@@ -34,7 +34,9 @@ if ($DriverPack){
 
 if ($Manufacturer -eq 'Lenovo') {
     Install-Module lsuclient -Force -Scope CurrentUser -SkipPublisherCheck
+    Start-Sleep -Seconds 120
     $updates = get-lsupdate
+    Start-Sleep -Seconds 120
     $updates | where-object {$_.type -eq 'BIOS'} | Install-LSUpdate -Verbose
     Start-Sleep -Seconds 120
 
