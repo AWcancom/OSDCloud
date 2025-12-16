@@ -54,12 +54,6 @@ Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation
 
 write-host "OSDCloud Process Complete, Running Custom Actions From Script Before Reboot"
 
-if ($Manufacturer -match "Lenovo") {
-    $PowerShellSavePath = 'C:\Program Files\WindowsPowerShell'
-    write-host "Copy-PSModuleToFolder -Name LSUClient to $PowerShellSavePath\Modules"
-    Copy-PSModuleToFolder -Name LSUClient -Destination "$PowerShellSavePath\Modules"
-}
-
 #================================================
 #  [PostOS] SetupComplete CMD Command Line
 #================================================
